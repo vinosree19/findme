@@ -1,3 +1,5 @@
+Ext.require([ 'Ext.form.*', 'Ext.tip.*' ]);
+Ext.QuickTips.init();
 Ext
 		.define(
 				'findme.view.Details',
@@ -28,7 +30,7 @@ Ext
 									id : 'user',
 								}, {
 									xtype : 'tbspacer',
-									width : '74%'
+									width : '67%'
 								}, {
 									xtype : 'button',
 									text : 'Save',
@@ -53,6 +55,18 @@ Ext
 										}
 									}
 								}, {
+									xtype : 'tbspacer',
+									width : '1%'
+								}, {
+									xtype : 'button',
+									text : 'Generate Pdf',
+									id : 'pdf',
+									listeners : {
+										click : function() {
+											this.fireEvent('generatein');
+										}
+									}
+								},{
 									xtype : 'tbspacer',
 									width : '1%'
 								}, {
@@ -273,7 +287,9 @@ Ext
 																	fieldLabel : 'Pin Code',
 																	allowBlank : false,
 																	width : '38%',
-																	labelWidth : 231
+																	labelWidth : 231,
+																	regex : /^\d{6}?$/,
+																	regexText : 'Pincode should be 6 digits.'
 																},
 																{
 																	xtype : 'textfield',
@@ -284,6 +300,10 @@ Ext
 																	width : '35%',
 																	margin : "0 10 0 90",
 																	labelWidth : 200,
+																	regex : /(^-?\d\d*\.\d*$)|(^-?\d\d*$)|(^-?\.\d\d*$)/,
+																	maxLength : 15,
+																	minLength : 10,
+																	regexText : 'Not a valid phone number. Must be in the format 1234567890 or 10 to 15 digits',
 																} ]
 
 													},
@@ -299,9 +319,10 @@ Ext
 																	name : 'email',
 																	id : 'email',
 																	fieldLabel : 'E-mail',
+																	vtype : 'email',
 																	allowBlank : false,
 																	width : '38%',
-																	labelWidth : 231
+																	labelWidth : 231,
 																},
 																{
 																	xtype : 'textfield',
@@ -311,7 +332,11 @@ Ext
 																	allowBlank : false,
 																	width : '35%',
 																	margin : "0 10 0 90",
-																	labelWidth : 200
+																	labelWidth : 200,
+																	regex : /(^-?\d\d*\.\d*$)|(^-?\d\d*$)|(^-?\.\d\d*$)/,
+																	maxLength : 10,
+																	minLength : 10,
+																	regexText : 'Not a valid mobile number. Must be in the format 1234567890 or 10 digits',
 																} ]
 
 													} ]
@@ -410,7 +435,9 @@ Ext
 																	fieldLabel : 'Pin Code',
 																	allowBlank : false,
 																	width : '38%',
-																	labelWidth : 231
+																	labelWidth : 231,
+																	regex : /^\d{6}?$/,
+																	regexText : 'PinCode should be 6 digits.'
 																},
 																{
 																	xtype : 'textfield',
@@ -420,7 +447,11 @@ Ext
 																	allowBlank : false,
 																	width : '35%',
 																	margin : "0 10 0 90",
-																	labelWidth : 200
+																	labelWidth : 200,
+																	regex : /(^-?\d\d*\.\d*$)|(^-?\d\d*$)|(^-?\.\d\d*$)/,
+																	maxLength : 15,
+																	minLength : 10,
+																	regexText : 'Not a valid mobile number. Must be in the format 1234567890 or 10 digits',
 																} ]
 
 													} ]
@@ -501,74 +532,113 @@ Ext
 											margin : "5 5 5 5",
 											width : '100%',
 											title : 'Experience',
-											items : [ {
-												xtype : 'container',
-												layout : 'hbox',
-												width : '100%',
-												height : '10%',
-												margin : "5 5 5 0",
-												items : [ {
-													xtype : 'textfield',
-													name : 'company',
-													id : 'company',
-													fieldLabel : 'Company',
-													allowBlank : false,
-													maxLength : 250,
-													width : '38%',
-													labelWidth : 231
-												}, {
-													xtype : 'textfield',
-													fieldLabel : 'Designation',
-													allowBlank : false,
-													id : 'prevdesignation',
-													width : '35%',
-													margin : "0 10 0 90",
-													labelWidth : 200,
-												} ]
-											}, {
-												xtype : 'container',
-												layout : 'hbox',
-												width : '100%',
-												height : '10%',
-												margin : "5 5 5 0",
-												items : [ {
-													xtype : 'datefield',
-													name : 'fromdate',
-													id : 'fromdate',
-													fieldLabel : 'From Date',
-													allowBlank : false,
-													width : '38%',
-													labelWidth : 231,
-													format : 'Y/m/d',
-													altFormats : 'Y/m/d',
-													maxValue : new Date(),
-													emptyText : 'yyyy/mm/dd',
-													maskRe : /[0-9\/]/
-												}, {
-													xtype : 'datefield',
-													name : 'todate',
-													id : 'todate',
-													fieldLabel : 'To Date',
-													allowBlank : false,
-													width : '35%',
-													labelWidth : 200,
-													format : 'Y/m/d',
-													altFormats : 'Y/m/d',
-													maxValue : new Date(),
-													emptyText : 'yyyy/mm/dd',
-													maskRe : /[0-9\/]/,
-													margin : "0 10 0 90",
-												} ]
+											items : [
+													{
+														xtype : 'container',
+														layout : 'hbox',
+														width : '100%',
+														height : '10%',
+														margin : "5 5 5 0",
+														items : [
+																{
+																	xtype : 'textfield',
+																	name : 'company',
+																	id : 'company',
+																	fieldLabel : 'Company',
+																	allowBlank : false,
+																	maxLength : 250,
+																	width : '38%',
+																	labelWidth : 231
+																},
+																{
+																	xtype : 'textfield',
+																	fieldLabel : 'Designation',
+																	allowBlank : false,
+																	id : 'prevdesignation',
+																	width : '35%',
+																	margin : "0 10 0 90",
+																	labelWidth : 200,
+																} ]
+													},
+													{
+														xtype : 'container',
+														layout : 'hbox',
+														width : '100%',
+														height : '10%',
+														margin : "5 5 5 0",
+														items : [
+																{
+																	xtype : 'datefield',
+																	name : 'fromdate',
+																	id : 'fromdate',
+																	fieldLabel : 'From Date',
+																	allowBlank : false,
+																	width : '38%',
+																	labelWidth : 231,
+																	format : 'Y/m/d',
+																	altFormats : 'Y/m/d',
+																	maxValue : new Date(),
+																	emptyText : 'yyyy/mm/dd',
+																	maskRe : /[0-9\/]/,
+																	listeners : {
+																		'select' : function() {
+																			this
+																					.fireEvent('fromdatevalidatein');
+																		}
+																	}
+																},
+																{
+																	xtype : 'datefield',
+																	name : 'todate',
+																	id : 'todate',
+																	fieldLabel : 'To Date',
+																	allowBlank : false,
+																	width : '35%',
+																	labelWidth : 200,
+																	format : 'Y/m/d',
+																	altFormats : 'Y/m/d',
+																	maxValue : new Date(),
+																	emptyText : 'yyyy/mm/dd',
+																	maskRe : /[0-9\/]/,
+																	margin : "0 10 0 90",
+																	disabled : true,
+																	listeners : {
+																		'select' : function() {
+																			this
+																					.fireEvent('todatevalidatein');
+																		}
+																	}
+																} ]
 
-											}, {
-												xtype : 'textfield',
-												name : 'experience',
-												id : 'experience',
-												fieldLabel : 'Experience',
-												allowBlank : false,
-												width : '35%',
-												labelWidth : 200,
-											} ]
+													},
+													{
+														xtype : 'container',
+														layout : 'hbox',
+														width : '100%',
+														height : '10%',
+														margin : "5 5 5 0",
+														items : [
+																{
+																	xtype : 'textfield',
+																	name : 'experience',
+																	id : 'experience',
+																	fieldLabel : 'Experience',
+																	readOnly : true,
+																	width : '35%',
+																	margin : "5 5 5 0",
+																	labelWidth : 231,
+																},
+																{
+																	xtype : 'textfield',
+																	fieldLabel : 'ExpSeq',
+																	id : 'expseq',
+																	width : '35%',
+																	margin : "0 10 0 90",
+																	labelWidth : 200,
+																	value : 1,
+																	hidden : true
+																} ]
+													} ]
 
 										} ]
 							} ]

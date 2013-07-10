@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.findme.dao.AddressDAO;
+import com.findme.dao.ExperienceDAO;
 import com.findme.dao.PersonDAO;
 import com.findme.dao.ProjectDAO;
 import com.findme.dao.UserDAO;
 import com.findme.model.Address;
+import com.findme.model.Experience;
 import com.findme.model.Person;
 import com.findme.model.Project;
 import com.findme.model.User;
@@ -34,6 +36,9 @@ public class UserService {
 
 	@Autowired
 	private ProjectDAO projectDAO;
+
+	@Autowired
+	private ExperienceDAO experienceDAO;
 
 	@Transactional
 	public List<User> getAuthentication(User data) {
@@ -84,6 +89,19 @@ public class UserService {
 	@Transactional
 	public Project getProjectDetails(int userId) {
 		return projectDAO.getProjectDetails(userId);
+	}
+
+	@Transactional
+	public void updateExperienceDetails(Experience experience, User user) {
+		experience.setUserid(user.getId());
+		experience.setLstUpdateDt(new Date());
+		experience.setLstUpdateUser(user.getId());
+		experienceDAO.updateExperienceDetails(experience);
+	}
+
+	@Transactional
+	public List<Experience> getExperienceDetails(int userId) {
+		return experienceDAO.getExperienceDetails(userId);
 	}
 
 }

@@ -25,14 +25,59 @@ Ext.define('findme.controller.MyController', {
 			'detailview button[id=refresh]' : {
 				refreshin : this.load
 			},
+			'detailview button[id=pdf]' : {
+				generatein : this.generate
+			},
 			'detailview' : {
 				afterrender : function() {
 					Ext.get('logout').on('click', function() {
 						logout();
 					});
 				}
+			},
+			'detailview datefield[id=fromdate]' : {
+				fromdatevalidatein : this.fromdatevalidatein
+			},
+			'detailview datefield[id=todate]' : {
+				todatevalidatein : this.todatevalidatein
 			}
 		});
+	},
+	
+	generate : function() {
+		window.location.href = '/findme/export.pdf';
+	},
+
+	fromdatevalidatein : function() {
+		if (Ext.getCmp('fromdate').getValue()
+				&& Ext.getCmp('todate').getValue()) {
+			Ext.getCmp('todate').setValue('');
+			Ext.getCmp('experience').setValue('');
+			var toDate = Ext.getCmp('todate');
+			toDate.setDisabled(false);
+			toDate.setMinValue(Ext.getCmp('fromdate').getValue());
+		} else if (Ext.getCmp('fromdate').getValue()) {
+			var toDate = Ext.getCmp('todate');
+			toDate.setDisabled(false);
+			toDate.setMinValue(Ext.getCmp('fromdate').getValue());
+		}
+	},
+
+	todatevalidatein : function() {
+		var d1 = Ext.getCmp('fromdate').getValue();
+		var d2 = Ext.getCmp('todate').getValue();
+		var month_diff = (d2.getFullYear() - d1.getFullYear()) * 12
+				+ d2.getMonth() - d1.getMonth();
+		var years = Math.floor(month_diff / 12);
+		var months = month_diff % 12;
+		if (years > 0 && months > 0) {
+			Ext.getCmp('experience').setValue(
+					years + ' years and ' + months + ' months');
+		} else if (years > 0 && months <= 0) {
+			Ext.getCmp('experience').setValue(years + ' year');
+		} else {
+			Ext.getCmp('experience').setValue(months + ' months');
+		}
 	},
 
 	chkbxin : function() {
@@ -109,45 +154,11 @@ Ext.define('findme.controller.MyController', {
 	},
 
 	dataValidation : function() {
-		var d = new Date(Ext.getCmp('dob').getValue());
-		var curr_date = d.getDate();
-		var curr_month = d.getMonth() + 1; // Months are zero based
-		var curr_year = d.getFullYear();
-		var person = {
-			"firstname" : Ext.getCmp('firstname').getValue(),
-			"middlename" : Ext.getCmp('middlename').getValue(),
-			"lastname" : Ext.getCmp('lastname').getValue(),
-			"dob" : curr_year + "/" + curr_month + "/" + curr_date,
-			"fmhname" : Ext.getCmp('fmhname').getValue(),
-			"gender" : Ext.getCmp('gender').getChecked()[0].boxLabel,
-			"marital" : Ext.getCmp('marital').getValue()
-		};
-		var address = {
-			"address" : Ext.getCmp('presentaddr').getValue(),
-			"addrSeq" : Ext.getCmp('addrseq').getValue(),
-			"state" : Ext.getCmp('state').getValue(),
-			"district" : Ext.getCmp('district').getValue(),
-			"pincode" : Ext.getCmp('pincode').getValue(),
-			"phonenumber" : Ext.getCmp('phonenumber').getValue().toString(),
-			"mobilenumber" : Ext.getCmp('mobilenumber').getValue().toString(),
-			"addrind" : "N",
-		};
-		var address1 = {
-			"address" : Ext.getCmp('permanentaddr').getValue(),
-			"addrSeq" : Ext.getCmp('addrseq1').getValue(),
-			"state" : Ext.getCmp('state1').getValue(),
-			"district" : Ext.getCmp('district1').getValue(),
-			"pincode" : Ext.getCmp('pincode1').getValue(),
-			"phonenumber" : Ext.getCmp('phonenumber1').getValue().toString(),
-			"mobilenumber" : "(null)",
-			"addrind" : Ext.getCmp('chkbx').getValue(),
-		};
-		var project = {
-			"project" : Ext.getCmp('currentprojectname').getValue(),
-			"designation" : Ext.getCmp('designation').getValue(),
-			"role" : Ext.getCmp('role').getValue(),
-			"projectdesc" : Ext.getCmp('currentprojdesc').getValue(),
-		};
+		var person = addPerson();
+		var address = addAddress();
+		var address1 = addAddress1();
+		var project = addProject();
+		var experience = addExperience();
 		Ext.Ajax
 				.request({
 					url : 'save.action',
@@ -161,7 +172,8 @@ Ext.define('findme.controller.MyController', {
 						"person" : person,
 						"address" : address,
 						"permanentaddr" : address1,
-						"project" : project
+						"project" : project,
+						"experience" : experience
 					}),
 					success : function(response) {
 						var result = Ext.decode(response.responseText);
@@ -277,6 +289,17 @@ function refresh(result) {
 		Ext.getCmp('role').setValue(result.project.role);
 		Ext.getCmp('currentprojdesc').setValue(result.project.projectdesc);
 	}
+	if (result.experience != null) {
+		Ext.getCmp('company').setValue(result.experience.company);
+		Ext.getCmp('prevdesignation').setValue(result.experience.designation);
+		var from = new Date();
+		from.setTime(result.experience.fromdate);
+		Ext.getCmp('fromdate').setValue(Ext.Date.format(from, 'Y/m/d'));
+		var to = new Date();
+		to.setTime(result.experience.todate);
+		Ext.getCmp('todate').setValue(Ext.Date.format(to, 'Y/m/d'));
+		Ext.getCmp('experience').setValue(result.experience.experience);
+	}
 }
 
 function registernow() {
@@ -317,4 +340,81 @@ function copyAddress() {
 
 function logout() {
 	window.location.href = "/findme";
+}
+
+function addPerson() {
+	var d = new Date(Ext.getCmp('dob').getValue());
+	var curr_date = d.getDate();
+	var curr_month = d.getMonth() + 1; // Months are zero based
+	var curr_year = d.getFullYear();
+	var person = {
+		"firstname" : Ext.getCmp('firstname').getValue(),
+		"middlename" : Ext.getCmp('middlename').getValue(),
+		"lastname" : Ext.getCmp('lastname').getValue(),
+		"dob" : curr_year + "/" + curr_month + "/" + curr_date,
+		"fmhname" : Ext.getCmp('fmhname').getValue(),
+		"gender" : Ext.getCmp('gender').getChecked()[0].boxLabel,
+		"marital" : Ext.getCmp('marital').getValue()
+	};
+	return person;
+}
+
+function addAddress() {
+	var address = {
+		"address" : Ext.getCmp('presentaddr').getValue(),
+		"addrSeq" : Ext.getCmp('addrseq').getValue(),
+		"state" : Ext.getCmp('state').getValue(),
+		"district" : Ext.getCmp('district').getValue(),
+		"pincode" : Ext.getCmp('pincode').getValue(),
+		"phonenumber" : Ext.getCmp('phonenumber').getValue().toString(),
+		"mobilenumber" : Ext.getCmp('mobilenumber').getValue().toString(),
+		"addrind" : "N",
+	};
+	return address;
+}
+
+function addAddress1() {
+	var address1 = {
+		"address" : Ext.getCmp('permanentaddr').getValue(),
+		"addrSeq" : Ext.getCmp('addrseq1').getValue(),
+		"state" : Ext.getCmp('state1').getValue(),
+		"district" : Ext.getCmp('district1').getValue(),
+		"pincode" : Ext.getCmp('pincode1').getValue(),
+		"phonenumber" : Ext.getCmp('phonenumber1').getValue().toString(),
+		"mobilenumber" : "(null)",
+		"addrind" : Ext.getCmp('chkbx').getValue(),
+	};
+	return address1;
+}
+
+function addProject() {
+	var project = {
+		"project" : Ext.getCmp('currentprojectname').getValue(),
+		"designation" : Ext.getCmp('designation').getValue(),
+		"role" : Ext.getCmp('role').getValue(),
+		"projectdesc" : Ext.getCmp('currentprojdesc').getValue(),
+	};
+	return project;
+}
+
+function addExperience() {
+	var from = new Date(Ext.getCmp('fromdate').getValue());
+	var from_curr_date = from.getDate();
+	var from_curr_month = from.getMonth() + 1; // Months are zero based
+	var from_curr_year = from.getFullYear();
+
+	var to = new Date(Ext.getCmp('todate').getValue());
+	var to_curr_date = to.getDate();
+	var to_curr_month = to.getMonth() + 1; // Months are zero based
+	var to_curr_year = to.getFullYear();
+	var experience = {
+		"company" : Ext.getCmp('company').getValue(),
+		"expSeq" : Ext.getCmp('expseq').getValue(),
+		"designation" : Ext.getCmp('prevdesignation').getValue(),
+		"fromdate" : from_curr_year + "/" + from_curr_month + "/"
+				+ from_curr_date,
+		"todate" : to_curr_year + "/" + to_curr_month + "/" + to_curr_date,
+		"experience" : Ext.getCmp('experience').getValue(),
+	};
+	return experience;
 }
