@@ -13,10 +13,10 @@ import com.findme.repository.IUserDAO;
 
 /**
  * @author vinodkumara
- *
+ * 
  */
 @Repository
-public class UserDAO implements IUserDAO{
+public class UserDAO implements IUserDAO {
 
 	@Autowired
 	private HibernateTemplate hibernateTemplate;
@@ -35,9 +35,9 @@ public class UserDAO implements IUserDAO{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> checkUser(User user) {
-		return hibernateTemplate.findByCriteria(
-		        DetachedCriteria.forClass(User.class)
-		        .add(Restrictions.eq("username", user.getUsername())));
+		return hibernateTemplate.findByCriteria(DetachedCriteria.forClass(
+				User.class)
+				.add(Restrictions.eq("username", user.getUsername())));
 	}
 
 	@Override

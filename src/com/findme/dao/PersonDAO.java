@@ -34,9 +34,10 @@ public class PersonDAO implements IPersonDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Person getPersonDetails(int userId) {
-		List<Person> persons = hibernateTemplate.findByCriteria(DetachedCriteria.forClass(Person.class).add(
-				Restrictions.eq("userid", userId)));
-		if(persons != null && persons.size() > 0){
+		List<Person> persons = hibernateTemplate
+				.findByCriteria(DetachedCriteria.forClass(Person.class).add(
+						Restrictions.eq("userid", userId)));
+		if (persons != null && persons.size() > 0) {
 			return persons.get(0);
 		}
 		return null;

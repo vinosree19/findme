@@ -29,8 +29,9 @@ public class ProjectDAO implements IProjectDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Project getProjectDetails(int userId) {
-		List<Project> projects = hibernateTemplate.findByCriteria(DetachedCriteria.forClass(Project.class).add(
-				Restrictions.eq("userid", userId)));
+		List<Project> projects = hibernateTemplate
+				.findByCriteria(DetachedCriteria.forClass(Project.class).add(
+						Restrictions.eq("userid", userId)));
 		if (projects != null && projects.size() > 0) {
 			return projects.get(0);
 		}

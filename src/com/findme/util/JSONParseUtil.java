@@ -72,5 +72,4 @@ public class JSONParseUtil {
 		experience.setExperience(jsonObject.getString("experience"));
 		return experience;
 	}
-
 }

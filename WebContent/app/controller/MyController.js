@@ -1,196 +1,236 @@
-Ext.define('findme.controller.MyController', {
-	extend : 'Ext.app.Controller',
-
-	init : function() {
-		this.control({
-			'loginview' : {
-				afterrender : function() {
-					Ext.get('registernow').on('click', function() {
-						registernow();
-					});
-				}
-			},
-			'loginview button[id=loginnow]' : {
-				loginin : this.loginuser
-			},
-			'registrationview button[id=submitregistration]' : {
-				registerin : this.registeruser
-			},
-			'detailview checkboxfield[id=chkbx]' : {
-				chkbxin : this.chkbxin
-			},
-			'detailview button[id=save]' : {
-				savein : this.dataValidation
-			},
-			'detailview button[id=refresh]' : {
-				refreshin : this.load
-			},
-			'detailview button[id=pdf]' : {
-				generatein : this.generate
-			},
-			'detailview' : {
-				afterrender : function() {
-					Ext.get('logout').on('click', function() {
-						logout();
-					});
-				}
-			},
-			'detailview datefield[id=fromdate]' : {
-				fromdatevalidatein : this.fromdatevalidatein
-			},
-			'detailview datefield[id=todate]' : {
-				todatevalidatein : this.todatevalidatein
-			}
-		});
-	},
-	
-	generate : function() {
-		window.location.href = '/findme/export.pdf';
-	},
-
-	fromdatevalidatein : function() {
-		if (Ext.getCmp('fromdate').getValue()
-				&& Ext.getCmp('todate').getValue()) {
-			Ext.getCmp('todate').setValue('');
-			Ext.getCmp('experience').setValue('');
-			var toDate = Ext.getCmp('todate');
-			toDate.setDisabled(false);
-			toDate.setMinValue(Ext.getCmp('fromdate').getValue());
-		} else if (Ext.getCmp('fromdate').getValue()) {
-			var toDate = Ext.getCmp('todate');
-			toDate.setDisabled(false);
-			toDate.setMinValue(Ext.getCmp('fromdate').getValue());
-		}
-	},
-
-	todatevalidatein : function() {
-		var d1 = Ext.getCmp('fromdate').getValue();
-		var d2 = Ext.getCmp('todate').getValue();
-		var month_diff = (d2.getFullYear() - d1.getFullYear()) * 12
-				+ d2.getMonth() - d1.getMonth();
-		var years = Math.floor(month_diff / 12);
-		var months = month_diff % 12;
-		if (years > 0 && months > 0) {
-			Ext.getCmp('experience').setValue(
-					years + ' years and ' + months + ' months');
-		} else if (years > 0 && months <= 0) {
-			Ext.getCmp('experience').setValue(years + ' year');
-		} else {
-			Ext.getCmp('experience').setValue(months + ' months');
-		}
-	},
-
-	chkbxin : function() {
-		if (isAddressEntered()) {
-			copyAddress();
-		} else {
-			Ext.getCmp('chkbx').setValue(false);
-			Ext.Msg.alert('Error', 'Please enter the present address.');
-		}
-	},
-
-	loginuser : function(username, password) {
-		if (username != '' && password != '') {
-			login(username, password);
-		} else {
-			resetLoginForm();
-		}
-	},
-
-	load : function() {
-		Ext.Ajax
-				.request({
-					url : 'refresh.action',
-					method : 'POST',
-					headers : {
-						'Content-Type' : 'application/json'
+Ext
+		.define(
+				'findme.controller.MyController',
+				{
+					extend : 'Ext.app.Controller',
+					init : function() {
+						this
+								.control({
+									'loginview' : {
+										afterrender : function() {
+											Ext.get('registernow').on('click',
+													function() {
+														registernow();
+													});
+										}
+									},
+									'loginview button[id=loginnow]' : {
+										loginin : this.loginuser
+									},
+									'registrationview button[id=submitregistration]' : {
+										registerin : this.registeruser
+									},
+									'detailview checkboxfield[id=chkbx]' : {
+										chkbxin : this.chkbxin
+									},
+									'detailview button[id=save]' : {
+										savein : this.dataValidation
+									},
+									'detailview button[id=refresh]' : {
+										refreshin : this.load
+									},
+									'detailview button[id=pdf]' : {
+										generatein : this.generate
+									},
+									'detailview' : {
+										afterrender : function() {
+											Ext.get('logout').on('click',
+													function() {
+														logout();
+													});
+										}
+									},
+									'detailview datefield[id=fromdate]' : {
+										fromdatevalidatein : this.fromdatevalidatein
+									},
+									'detailview datefield[id=todate]' : {
+										todatevalidatein : this.todatevalidatein
+									},
+									'detailview combo[id=databases]' : {
+										dbin : this.dbin
+									},
+									'detailview combo[id=development]' : {
+										devin : this.devin
+									},
+									'detailview button[id=edu]' : {
+										eduin : this.eduin
+									}
+								});
 					},
-					dataType : 'json',
-					jsonData : JSON.stringify({
-						"username" : Ext.getCmp('user').getValue()
-					}),
-					success : function(response) {
-						var result = Ext.decode(response.responseText);
-						if (result.msg) {
-							refresh(result);
+					eduin : function() {
+						Ext.create('Ext.container.Viewport', {
+							items : [ {
+								xtype : 'writerform'
+							} ]
+						});
+					},
+					dbin : function() {
+						// Ext.getCmp('sdb').setValue(Ext.getCmp('databases').getValue());
+						if (dbstore1.findExact('name', Ext.getCmp('databases')
+								.getValue()) == -1) {
+							dbstore1.add({
+								name : Ext.getCmp('databases').getValue()
+							});
 						} else {
-							Ext.Msg.alert('Staus', 'Refresh Issue.');
+							Ext.Msg.alert('Error', 'Already Selected.');
 						}
 					},
-					failure : function(response) {
-						alert('server-side failure with status code '
-								+ response.status);
-					}
-				});
-	},
-
-	registeruser : function(username, password, email) {
-		Ext.Ajax
-				.request({
-					url : 'register.action',
-					method : 'POST',
-					headers : {
-						'Content-Type' : 'application/json'
-					},
-					dataType : 'json',
-					jsonData : JSON.stringify({
-						"username" : username,
-						"password" : password,
-						"email" : email
-					}),
-					success : function(response) {
-						var result = Ext.decode(response.responseText);
-						if (result) {
-							logout();
+					devin : function() {
+						// Ext.getCmp('sdev').setValue(Ext.getCmp('development').getValue());
+						if (techstore1.findExact('name', Ext.getCmp(
+								'development').getValue()) == -1) {
+							techstore1.add({
+								name : Ext.getCmp('development').getValue()
+							});
 						} else {
-							resetRegistrationForm();
+							Ext.Msg.alert('Error', 'Already Selected.');
 						}
 					},
-					failure : function(response) {
-						alert('server-side failure with status code '
-								+ response.status);
-					}
-				});
-	},
-
-	dataValidation : function() {
-		var person = addPerson();
-		var address = addAddress();
-		var address1 = addAddress1();
-		var project = addProject();
-		var experience = addExperience();
-		Ext.Ajax
-				.request({
-					url : 'save.action',
-					method : 'POST',
-					headers : {
-						'Content-Type' : 'application/json'
+					generate : function() {
+						window.location.href = '/findme/export.pdf';
 					},
-					dataType : 'json',
-					jsonData : JSON.stringify({
-						"email" : Ext.getCmp('email').getValue(),
-						"person" : person,
-						"address" : address,
-						"permanentaddr" : address1,
-						"project" : project,
-						"experience" : experience
-					}),
-					success : function(response) {
-						var result = Ext.decode(response.responseText);
-						if (result) {
-							Ext.Msg.alert('Staus', 'Successfully saved.');
-						} else {
-							Ext.Msg.alert('Staus', 'Not saved.');
+					fromdatevalidatein : function() {
+						if (Ext.getCmp('fromdate').getValue()
+								&& Ext.getCmp('todate').getValue()) {
+							Ext.getCmp('todate').setValue('');
+							Ext.getCmp('experience').setValue('');
+							var toDate = Ext.getCmp('todate');
+							toDate.setDisabled(false);
+							toDate.setMinValue(Ext.getCmp('fromdate')
+									.getValue());
+						} else if (Ext.getCmp('fromdate').getValue()) {
+							var toDate = Ext.getCmp('todate');
+							toDate.setDisabled(false);
+							toDate.setMinValue(Ext.getCmp('fromdate')
+									.getValue());
 						}
 					},
-					failure : function(response) {
-						alert('server-side failure with status code '
-								+ response.status);
+					todatevalidatein : function() {
+						var d1 = Ext.getCmp('fromdate').getValue();
+						var d2 = Ext.getCmp('todate').getValue();
+						var month_diff = (d2.getFullYear() - d1.getFullYear())
+								* 12 + d2.getMonth() - d1.getMonth();
+						var years = Math.floor(month_diff / 12);
+						var months = month_diff % 12;
+						if (years > 0 && months > 0) {
+							Ext.getCmp('experience').setValue(
+									years + ' years and ' + months + ' months');
+						} else if (years > 0 && months <= 0) {
+							Ext.getCmp('experience').setValue(years + ' year');
+						} else {
+							Ext.getCmp('experience').setValue(
+									months + ' months');
+						}
+					},
+					chkbxin : function() {
+						if (isAddressEntered()) {
+							copyAddress();
+						} else {
+							Ext.getCmp('chkbx').setValue(false);
+							Ext.Msg.alert('Error',
+									'Please enter the present address.');
+						}
+					},
+					loginuser : function(username, password) {
+						if (username != '' && password != '') {
+							login(username, password);
+						} else {
+							resetLoginForm();
+						}
+					},
+					load : function() {
+						Ext.Ajax.request({
+							url : 'refresh.action',
+							method : 'POST',
+							headers : {
+								'Content-Type' : 'application/json'
+							},
+							dataType : 'json',
+							jsonData : JSON.stringify({
+								"username" : Ext.getCmp('user').getValue()
+							}),
+							success : function(response) {
+								var result = Ext.decode(response.responseText);
+								if (result.msg) {
+									refresh(result);
+								} else {
+									Ext.Msg.alert('Staus', 'Refresh Issue.');
+								}
+							},
+							failure : function(response) {
+								alert('server-side failure with status code '
+										+ response.status);
+							}
+						});
+					},
+					registeruser : function(username, password, email) {
+						Ext.Ajax.request({
+							url : 'register.action',
+							method : 'POST',
+							headers : {
+								'Content-Type' : 'application/json'
+							},
+							dataType : 'json',
+							jsonData : JSON.stringify({
+								"username" : username,
+								"password" : password,
+								"email" : email
+							}),
+							success : function(response) {
+								var result = Ext.decode(response.responseText);
+								if (result) {
+									logout();
+								} else {
+									resetRegistrationForm();
+								}
+							},
+							failure : function(response) {
+								alert('server-side failure with status code '
+										+ response.status);
+							}
+						});
+					},
+					dataValidation : function() {
+						var person = addPerson();
+						var address = addAddress();
+						var address1 = addAddress1();
+						var project = addProject();
+						var experience = addExperience();
+						var store = addDatabase();
+						var development = addDevelopment();
+						Ext.Ajax.request({
+							url : 'save.action',
+							method : 'POST',
+							headers : {
+								'Content-Type' : 'application/json'
+							},
+							dataType : 'json',
+							jsonData : JSON.stringify({
+								"email" : Ext.getCmp('email').getValue(),
+								"person" : person,
+								"address" : address,
+								"permanentaddr" : address1,
+								"project" : project,
+								"experience" : experience,
+								"database" : store,
+								"development" : development,
+							}),
+							success : function(response) {
+								var result = Ext.decode(response.responseText);
+								if (result) {
+									Ext.Msg.alert('Staus',
+											'Successfully saved.');
+								} else {
+									Ext.Msg.alert('Staus', 'Not saved.');
+								}
+							},
+							failure : function(response) {
+								alert('server-side failure with status code '
+										+ response.status);
+							}
+						});
 					}
 				});
-	}
-
-});
 
 function login(username, password) {
 	Ext.Ajax.request({
@@ -300,6 +340,22 @@ function refresh(result) {
 		Ext.getCmp('todate').setValue(Ext.Date.format(to, 'Y/m/d'));
 		Ext.getCmp('experience').setValue(result.experience.experience);
 	}
+	if (result.database != null) {
+		dbstore1.removeAll();
+		for ( var i = 0; i < result.database.length; i++) {
+			dbstore1.add({
+				name : result.database[i].technology
+			});
+		};
+	}
+	if (result.development != null) {
+		techstore1.removeAll();
+		for ( var i = 0; i < result.development.length; i++) {
+			techstore1.add({
+				name : result.development[i].technology
+			});
+		};
+	}
 }
 
 function registernow() {
@@ -402,7 +458,6 @@ function addExperience() {
 	var from_curr_date = from.getDate();
 	var from_curr_month = from.getMonth() + 1; // Months are zero based
 	var from_curr_year = from.getFullYear();
-
 	var to = new Date(Ext.getCmp('todate').getValue());
 	var to_curr_date = to.getDate();
 	var to_curr_month = to.getMonth() + 1; // Months are zero based
@@ -417,4 +472,34 @@ function addExperience() {
 		"experience" : Ext.getCmp('experience').getValue(),
 	};
 	return experience;
+}
+
+function addDatabase() {
+	var store = [];
+	dbstore1.each(function(record, idx) {
+		var databases = {
+			"technology" : record.get('name')
+		};
+		store.push(databases);
+	});
+	var db = {
+		"user" : Ext.getCmp("user").getValue(),
+		"databases" : store
+	};
+	return db;
+}
+
+function addDevelopment() {
+	var store = [];
+	techstore1.each(function(record, idx) {
+		var developments = {
+			"technology" : record.get('name')
+		};
+		store.push(developments);
+	});
+	var dev = {
+		"user" : Ext.getCmp("user").getValue(),
+		"developments" : store
+	};
+	return dev;
 }

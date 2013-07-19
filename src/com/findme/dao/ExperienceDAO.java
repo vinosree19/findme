@@ -26,12 +26,11 @@ public class ExperienceDAO implements IExperienceDAO {
 		this.hibernateTemplate = hibernateTemplate;
 	}
 
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Experience> getExperienceDetails(int userId) {
-		return hibernateTemplate.findByCriteria(DetachedCriteria.forClass(Experience.class).add(
-				Restrictions.eq("userid", userId)));
+		return hibernateTemplate.findByCriteria(DetachedCriteria.forClass(
+				Experience.class).add(Restrictions.eq("userid", userId)));
 	}
 
 	@Override

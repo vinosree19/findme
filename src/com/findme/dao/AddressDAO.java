@@ -34,8 +34,8 @@ public class AddressDAO implements IAddressDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Address> getAddressDetails(int userId) {
-		return hibernateTemplate.findByCriteria(DetachedCriteria.forClass(Address.class).add(
-				Restrictions.eq("userid", userId)));
+		return hibernateTemplate.findByCriteria(DetachedCriteria.forClass(
+				Address.class).add(Restrictions.eq("userid", userId)));
 	}
 
 }

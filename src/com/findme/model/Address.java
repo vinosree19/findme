@@ -43,7 +43,7 @@ public class Address implements Serializable {
 	private Date lstUpdateDt;
 
 	private int lstUpdateUser;
-	
+
 	private boolean addrind;
 
 	/**
@@ -217,7 +217,8 @@ public class Address implements Serializable {
 	}
 
 	/**
-	 * @param addrind the addrind to set
+	 * @param addrind
+	 *            the addrind to set
 	 */
 	public void setAddrind(boolean addrind) {
 		this.addrind = addrind;

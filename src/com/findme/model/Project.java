@@ -12,7 +12,7 @@ import org.codehaus.jackson.annotate.JsonAutoDetect;
 
 /**
  * @author vinodkumara
- *
+ * 
  */
 @JsonAutoDetect
 @Entity
@@ -48,7 +48,8 @@ public class Project implements Serializable {
 	}
 
 	/**
-	 * @param userid the userid to set
+	 * @param userid
+	 *            the userid to set
 	 */
 	public void setUserid(int userid) {
 		this.userid = userid;
@@ -63,7 +64,8 @@ public class Project implements Serializable {
 	}
 
 	/**
-	 * @param project the project to set
+	 * @param project
+	 *            the project to set
 	 */
 	public void setProject(String project) {
 		this.project = project;
@@ -78,7 +80,8 @@ public class Project implements Serializable {
 	}
 
 	/**
-	 * @param designation the designation to set
+	 * @param designation
+	 *            the designation to set
 	 */
 	public void setDesignation(String designation) {
 		this.designation = designation;
@@ -93,7 +96,8 @@ public class Project implements Serializable {
 	}
 
 	/**
-	 * @param role the role to set
+	 * @param role
+	 *            the role to set
 	 */
 	public void setRole(String role) {
 		this.role = role;
@@ -108,7 +112,8 @@ public class Project implements Serializable {
 	}
 
 	/**
-	 * @param project_desc the project_desc to set
+	 * @param project_desc
+	 *            the project_desc to set
 	 */
 	public void setProjectdesc(String projectdesc) {
 		this.projectdesc = projectdesc;
@@ -123,7 +128,8 @@ public class Project implements Serializable {
 	}
 
 	/**
-	 * @param lstUpdateDt the lstUpdateDt to set
+	 * @param lstUpdateDt
+	 *            the lstUpdateDt to set
 	 */
 	public void setLstUpdateDt(Date lstUpdateDt) {
 		this.lstUpdateDt = lstUpdateDt;
@@ -138,7 +144,8 @@ public class Project implements Serializable {
 	}
 
 	/**
-	 * @param lstUpdateUser the lstUpdateUser to set
+	 * @param lstUpdateUser
+	 *            the lstUpdateUser to set
 	 */
 	public void setLstUpdateUser(int lstUpdateUser) {
 		this.lstUpdateUser = lstUpdateUser;

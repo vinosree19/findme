@@ -1,0 +1,772 @@
+// Technologies
+{
+	"success": [
+	{
+		"name": "4th Dimension/4D"
+	},
+	{
+		"name": "ABAP"
+	},
+	{
+		"name": "ABC"
+	},
+	{
+		"name": "ActionScript"
+	},
+	{
+		"name": "Ada"
+	},
+	{
+		"name": "Agilent VEE"
+	},
+	{
+		"name": "Algol"
+	},
+	{
+		"name": "Alice"
+	},
+	{
+		"name": "Angelscript"
+	},
+	{
+		"name": "Apex"
+	},
+	{
+		"name": "APL"
+	},
+	{
+		"name": "AppleScript"
+	},
+	{
+		"name": "Arc"
+	},
+	{
+		"name": "Arduino"
+	},
+	{
+		"name": "ASP"
+	},
+	{
+		"name": "AspectJ"
+	},
+	{
+		"name": "Assembly"
+	},
+	{
+		"name": "ATLAS"
+	},
+	{
+		"name": "Augeas"
+	},
+	{
+		"name": "AutoHotkey"
+	},
+	{
+		"name": "AutoIt"
+	},
+	{
+		"name": "AutoLISP"
+	},
+	{
+		"name": "Automator"
+	},
+	{
+		"name": "Avenue"
+	},
+	{
+		"name": "Awk"
+	},
+	{
+		"name": "Bash"
+	},
+	{
+		"name": "(Visual) Basic"
+	},
+	{
+		"name": "bc"
+	},
+	{
+		"name": "BCPL"
+	},
+	{
+		"name": "BETA"
+	},
+	{
+		"name": "BlitzMax"
+	},
+	{
+		"name": "Boo"
+	},
+	{
+		"name": "Bourne Shell"
+	},
+	{
+		"name": "Bro"
+	},
+	{
+		"name": "C"
+	},
+	{
+		"name": "C Shell"
+	},
+	{
+		"name": "C#"
+	},
+	{
+		"name": "C++"
+	},
+	{
+		"name": "C++/CLI"
+	},
+	{
+		"name": "C-Omega"
+	},
+	{
+		"name": "Caml"
+	},
+	{
+		"name": "Ceylon"
+	},
+	{
+		"name": "CFML"
+	},
+	{
+		"name": "cg"
+	},
+	{
+		"name": "Ch"
+	},
+	{
+		"name": "CHILL"
+	},
+	{
+		"name": "CIL"
+	},
+	{
+		"name": "CL (OS/400)"
+	},
+	{
+		"name": "Clarion"
+	},
+	{
+		"name": "Clean"
+	},
+	{
+		"name": "Clipper"
+	},
+	{
+		"name": "Clojure"
+	},
+	{
+		"name": "CLU"
+	},
+	{
+		"name": "COBOL"
+	},
+	{
+		"name": "Cobra"
+	},
+	{
+		"name": "CoffeeScript"
+	},
+	{
+		"name": "ColdFusion"
+	},
+	{
+		"name": "COMAL"
+	},
+	{
+		"name": "Common Lisp"
+	},
+	{
+		"name": "Coq"
+	},
+	{
+		"name": "cT"
+	},
+	{
+		"name": "Curl"
+	},
+	{
+		"name": "D"
+	},
+	{
+		"name": "Dart"
+	},
+	{
+		"name": "DCL"
+	},
+	{
+		"name": "DCPU-16 ASM"
+	},
+	{
+		"name": "Delphi/Object Pascal"
+	},
+	{
+		"name": "DiBOL"
+	},
+	{
+		"name": "Dylan"
+	},
+	{
+		"name": "E"
+	},
+	{
+		"name": "eC"
+	},
+	{
+		"name": "Ecl"
+	},
+	{
+		"name": "ECMAScript"
+	},
+	{
+		"name": "EGL"
+	},
+	{
+		"name": "Eiffel"
+	},
+	{
+		"name": "Elixir"
+	},
+	{
+		"name": "Emacs Lisp"
+	},
+	{
+		"name": "Erlang"
+	},
+	{
+		"name": "Etoys"
+	},
+	{
+		"name": "Euphoria"
+	},
+	{
+		"name": "EXEC"
+	},
+	{
+		"name": "F#"
+	},
+	{
+		"name": "Factor"
+	},
+	{
+		"name": "Falcon"
+	},
+	{
+		"name": "Fancy"
+	},
+	{
+		"name": "Fantom"
+	},
+	{
+		"name": "Felix"
+	},
+	{
+		"name": "Forth"
+	},
+	{
+		"name": "Fortran"
+	},
+	{
+		"name": "Fortress"
+	},
+	{
+		"name": "(Visual) FoxPro"
+	},
+	{
+		"name": "Gambas"
+	},
+	{
+		"name": "GNU Octave"
+	},
+	{
+		"name": "Go"
+	},
+	{
+		"name": "Google AppsScript"
+	},
+	{
+		"name": "Gosu"
+	},
+	{
+		"name": "Groovy"
+	},
+	{
+		"name": "Haskell"
+	},
+	{
+		"name": "haXe"
+	},
+	{
+		"name": "Heron"
+	},
+	{
+		"name": "HPL"
+	},
+	{
+		"name": "HyperTalk"
+	},
+	{
+		"name": "Icon"
+	},
+	{
+		"name": "IDL"
+	},
+	{
+		"name": "Inform"
+	},
+	{
+		"name": "Informix-4GL"
+	},
+	{
+		"name": "INTERCAL"
+	},
+	{
+		"name": "Io"
+	},
+	{
+		"name": "Ioke"
+	},
+	{
+		"name": "J"
+	},
+	{
+		"name": "J#"
+	},
+	{
+		"name": "JADE"
+	},
+	{
+		"name": "Java"
+	},
+	{
+		"name": "Java FX Script"
+	},
+	{
+		"name": "JavaScript"
+	},
+	{
+		"name": "JScript"
+	},
+	{
+		"name": "JScript.NET"
+	},
+	{
+		"name": "Julia"
+	},
+	{
+		"name": "Korn Shell"
+	},
+	{
+		"name": "Kotlin"
+	},
+	{
+		"name": "LabVIEW"
+	},
+	{
+		"name": "Ladder Logic"
+	},
+	{
+		"name": "Lasso"
+	},
+	{
+		"name": "Limbo"
+	},
+	{
+		"name": "Lingo"
+	},
+	{
+		"name": "Lisp"
+	},
+	{
+		"name": "Logo"
+	},
+	{
+		"name": "Logtalk"
+	},
+	{
+		"name": "LotusScript"
+	},
+	{
+		"name": "LPC"
+	},
+	{
+		"name": "Lua"
+	},
+	{
+		"name": "Lustre"
+	},
+	{
+		"name": "M4"
+	},
+	{
+		"name": "MAD"
+	},
+	{
+		"name": "Magic"
+	},
+	{
+		"name": "Magik"
+	},
+	{
+		"name": "Malbolge"
+	},
+	{
+		"name": "MANTIS"
+	},
+	{
+		"name": "Maple"
+	},
+	{
+		"name": "Mathematica"
+	},
+	{
+		"name": "MATLAB"
+	},
+	{
+		"name": "Max/MSP"
+	},
+	{
+		"name": "MAXScript"
+	},
+	{
+		"name": "MEL"
+	},
+	{
+		"name": "Mercury"
+	},
+	{
+		"name": "Mirah"
+	},
+	{
+		"name": "Miva"
+	},
+	{
+		"name": "ML"
+	},
+	{
+		"name": "Monkey"
+	},
+	{
+		"name": "Modula-2"
+	},
+	{
+		"name": "Modula-3"
+	},
+	{
+		"name": "MOO"
+	},
+	{
+		"name": "Moto"
+	},
+	{
+		"name": "MS-DOS Batch"
+	},
+	{
+		"name": "MUMPS"
+	},
+	{
+		"name": "NATURAL"
+	},
+	{
+		"name": "Nemerle"
+	},
+	{
+		"name": "Nimrod"
+	},
+	{
+		"name": "NQC"
+	},
+	{
+		"name": "NSIS"
+	},
+	{
+		"name": "Nu"
+	},
+	{
+		"name": "NXT-G"
+	},
+	{
+		"name": "Oberon"
+	},
+	{
+		"name": "Object Rexx"
+	},
+	{
+		"name": "Objective-C"
+	},
+	{
+		"name": "Objective-J"
+	},
+	{
+		"name": "OCaml"
+	},
+	{
+		"name": "Occam"
+	},
+	{
+		"name": "ooc"
+	},
+	{
+		"name": "Opa"
+	},
+	{
+		"name": "OpenCL"
+	},
+	{
+		"name": "OpenEdge ABL"
+	},
+	{
+		"name": "OPL"
+	},
+	{
+		"name": "Oz"
+	},
+	{
+		"name": "Paradox"
+	},
+	{
+		"name": "Parrot"
+	},
+	{
+		"name": "Pascal"
+	},
+	{
+		"name": "Perl"
+	},
+	{
+		"name": "PHP"
+	},
+	{
+		"name": "Pike"
+	},
+	{
+		"name": "PILOT"
+	},
+	{
+		"name": "PL/I"
+	},
+	{
+		"name": "PL/SQL"
+	},
+	{
+		"name": "Pliant"
+	},
+	{
+		"name": "PostScript"
+	},
+	{
+		"name": "POV-Ray"
+	},
+	{
+		"name": "PowerBasic"
+	},
+	{
+		"name": "PowerScript"
+	},
+	{
+		"name": "PowerShell"
+	},
+	{
+		"name": "Processing"
+	},
+	{
+		"name": "Prolog"
+	},
+	{
+		"name": "Puppet"
+	},
+	{
+		"name": "Pure Data"
+	},
+	{
+		"name": "Python"
+	},
+	{
+		"name": "Q"
+	},
+	{
+		"name": "R"
+	},
+	{
+		"name": "Racket"
+	},
+	{
+		"name": "REALBasic"
+	},
+	{
+		"name": "REBOL"
+	},
+	{
+		"name": "Revolution"
+	},
+	{
+		"name": "REXX"
+	},
+	{
+		"name": "RPG (OS/400)"
+	},
+	{
+		"name": "Ruby"
+	},
+	{
+		"name": "Rust"
+	},
+	{
+		"name": "S"
+	},
+	{
+		"name": "S-PLUS"
+	},
+	{
+		"name": "SAS"
+	},
+	{
+		"name": "Sather"
+	},
+	{
+		"name": "Scala"
+	},
+	{
+		"name": "Scheme"
+	},
+	{
+		"name": "Scilab"
+	},
+	{
+		"name": "Scratch"
+	},
+	{
+		"name": "sed"
+	},
+	{
+		"name": "Seed7"
+	},
+	{
+		"name": "Self"
+	},
+	{
+		"name": "Shell"
+	},
+	{
+		"name": "SIGNAL"
+	},
+	{
+		"name": "Simula"
+	},
+	{
+		"name": "Simulink"
+	},
+	{
+		"name": "Slate"
+	},
+	{
+		"name": "Smalltalk"
+	},
+	{
+		"name": "Smarty"
+	},
+	{
+		"name": "SPARK"
+	},
+	{
+		"name": "SPSS"
+	},
+	{
+		"name": "SQR"
+	},
+	{
+		"name": "Squeak"
+	},
+	{
+		"name": "Squirrel"
+	},
+	{
+		"name": "Standard ML"
+	},
+	{
+		"name": "Suneido"
+	},
+	{
+		"name": "SuperCollider"
+	},
+	{
+		"name": "TACL"
+	},
+	{
+		"name": "Tcl"
+	},
+	{
+		"name": "Tex"
+	},
+	{
+		"name": "thinBasic"
+	},
+	{
+		"name": "TOM"
+	},
+	{
+		"name": "Transact-SQL"
+	},
+	{
+		"name": "Turing"
+	},
+	{
+		"name": "TypeScript"
+	},
+	{
+		"name": "Vala/Genie"
+	},
+	{
+		"name": "VBScript"
+	},
+	{
+		"name": "Verilog"
+	},
+	{
+		"name": "VHDL"
+	},
+	{
+		"name": "VimL"
+	},
+	{
+		"name": "Visual Basic .NET"
+	},
+	{
+		"name": "WebDNA"
+	},
+	{
+		"name": "Whitespace"
+	},
+	{
+		"name": "X10"
+	},
+	{
+		"name": "xBase"
+	},
+	{
+		"name": "XBase++"
+	},
+	{
+		"name": "Xen"
+	},
+	{
+		"name": "XPL"
+	},
+	{
+		"name": "XSLT"
+	},
+	{
+		"name": "XQuery"
+	},
+	{
+		"name": "yacc"
+	},
+	{
+		"name": "Yorick"
+	},
+	{
+		"name": "Z shell"
+	}]
+}

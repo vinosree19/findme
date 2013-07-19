@@ -4,15 +4,20 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.findme.dao.AddressDAO;
+import com.findme.dao.DatabaseDAO;
+import com.findme.dao.DevelopmentDAO;
 import com.findme.dao.ExperienceDAO;
 import com.findme.dao.PersonDAO;
 import com.findme.dao.ProjectDAO;
 import com.findme.dao.UserDAO;
 import com.findme.model.Address;
+import com.findme.model.Database;
+import com.findme.model.Development;
 import com.findme.model.Experience;
 import com.findme.model.Person;
 import com.findme.model.Project;
@@ -39,6 +44,20 @@ public class UserService {
 
 	@Autowired
 	private ExperienceDAO experienceDAO;
+
+	@Autowired
+	private DatabaseDAO databaseDAO;
+
+	@Autowired
+	private DevelopmentDAO developmentDAO;
+
+	@Autowired
+	private HibernateTemplate hibernateTemplate;
+
+	@Autowired
+	public void setHibernateTemplate(HibernateTemplate hibernateTemplate) {
+		this.hibernateTemplate = hibernateTemplate;
+	}
 
 	@Transactional
 	public List<User> getAuthentication(User data) {
@@ -104,4 +123,46 @@ public class UserService {
 		return experienceDAO.getExperienceDetails(userId);
 	}
 
+	@Transactional
+	public Database updateDatabaseDetails(String string, User user, int index) {
+		Database database = new Database();
+		database.setUserid(user.getId());
+		database.setDbSeq(index);
+		database.setTechnology(string);
+		database.setLstUpdateDt(new Date());
+		database.setLstUpdateUser(user.getId());
+		return databaseDAO.updateDatabaseDetails(database);
+	}
+
+	@Transactional
+	public List<Database> getDatabaseDetails(int userId) {
+		return databaseDAO.getDatabaseDetails(userId);
+	}
+
+	@Transactional
+	public void deleteDatabaseDetails(int userId) {
+		databaseDAO.deleteDatabaseDetails(userId);
+	}
+
+	@Transactional
+	public Development updateDevelopmentDetails(String string, User user,
+			int index) {
+		Development development = new Development();
+		development.setUserid(user.getId());
+		development.setDevSeq(index);
+		development.setTechnology(string);
+		development.setLstUpdateDt(new Date());
+		development.setLstUpdateUser(user.getId());
+		return developmentDAO.updateDevelopmentDetails(development);
+	}
+
+	@Transactional
+	public List<Development> getDevelopmentDetails(int userId) {
+		return developmentDAO.getDevelopmentDetails(userId);
+	}
+
+	@Transactional
+	public void deleteDevelopmentDetails(int userId) {
+		developmentDAO.deleteDevelopmentDetails(userId);
+	}
 }
