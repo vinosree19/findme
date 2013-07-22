@@ -7,6 +7,8 @@ import java.util.Date;
 import org.springframework.ui.ModelMap;
 
 import com.findme.model.Address;
+import com.findme.model.Database;
+import com.findme.model.Development;
 import com.findme.model.Experience;
 import com.findme.model.Person;
 import com.findme.model.Project;
@@ -15,6 +17,8 @@ import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
+import com.lowagie.text.List;
+import com.lowagie.text.ListItem;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.pdf.PdfPTable;
 
@@ -30,12 +34,32 @@ public class DataUtil {
 
 	public Document createPdfData(Document document, ModelMap map)
 			throws DocumentException {
-		createUserData(document, map);
-		createPersonData(document, map);
-		createAddressData(document, map);
-		createPermanentAddressData(document, map);
-		createExperienceData(document, map);
-		createProjectData(document, map);
+		User user = (User) map.get("user");
+		if (user != null) {
+			createUserData(document, user);
+		}
+		Person person = (Person) map.get("person");
+		if (person != null) {
+			createPersonData(document, person);
+		}
+		Address address = (Address) map.get("address");
+		if (address != null) {
+			createAddressData(document, address);
+		}
+		Address address1 = (Address) map.get("address1");
+		if (address1 != null) {
+			createPermanentAddressData(document, address1);
+		}
+		Experience experience = (Experience) map.get("experience");
+		if (experience != null) {
+			createExperienceData(document, experience);
+		}
+		Project project = (Project) map.get("project");
+		if (project != null) {
+			createProjectData(document, project);
+		}
+		createDatabaseData(document, map);
+		createDevelopmentData(document, map);
 		return document;
 	}
 
@@ -46,10 +70,8 @@ public class DataUtil {
 				+ cal.get(Calendar.DATE) + "," + cal.get(Calendar.YEAR);
 	}
 
-	private Document createUserData(Document document, ModelMap map)
+	private Document createUserData(Document document, User user)
 			throws DocumentException {
-		User user = (User) map.get("user");
-
 		Paragraph userpar = new Paragraph();
 		userpar.add(user.getUsername());
 		userpar.setAlignment(Element.ALIGN_RIGHT);
@@ -65,7 +87,7 @@ public class DataUtil {
 		return document;
 	}
 
-	private Document createPersonData(Document document, ModelMap map)
+	private Document createPersonData(Document document, Person person)
 			throws DocumentException {
 		String name;
 		Paragraph personHeader = new Paragraph(
@@ -78,8 +100,6 @@ public class DataUtil {
 		PdfPTable personTable = new PdfPTable(2);
 		personTable.setWidthPercentage(75);
 		personTable.setSpacingBefore(20);
-
-		Person person = (Person) map.get("person");
 
 		Paragraph fnamepar = new Paragraph();
 		fnamepar.add(person.getFirstname());
@@ -132,7 +152,7 @@ public class DataUtil {
 		return document;
 	}
 
-	private Document createAddressData(Document document, ModelMap map)
+	private Document createAddressData(Document document, Address address)
 			throws DocumentException {
 		Paragraph addressHeader = new Paragraph("Present Address Detail:",
 				new Font(Font.BOLD));
@@ -144,8 +164,6 @@ public class DataUtil {
 		PdfPTable addrTable = new PdfPTable(2);
 		addrTable.setWidthPercentage(75);
 		addrTable.setSpacingBefore(20);
-
-		Address address = (Address) map.get("address");
 
 		Paragraph addrpar = new Paragraph();
 		addrpar.add(address.getAddress());
@@ -187,8 +205,8 @@ public class DataUtil {
 		return document;
 	}
 
-	private Document createPermanentAddressData(Document document, ModelMap map)
-			throws DocumentException {
+	private Document createPermanentAddressData(Document document,
+			Address address) throws DocumentException {
 		Paragraph addressHeader = new Paragraph("Permanent Address Detail:",
 				new Font(Font.BOLD));
 		addressHeader.setSpacingBefore(15);
@@ -199,8 +217,6 @@ public class DataUtil {
 		PdfPTable addrTable = new PdfPTable(2);
 		addrTable.setWidthPercentage(75);
 		addrTable.setSpacingBefore(20);
-
-		Address address = (Address) map.get("address1");
 
 		Paragraph addrpar = new Paragraph();
 		addrpar.add(address.getAddress());
@@ -236,8 +252,8 @@ public class DataUtil {
 		return document;
 	}
 
-	private Document createExperienceData(Document document, ModelMap map)
-			throws DocumentException {
+	private Document createExperienceData(Document document,
+			Experience experience) throws DocumentException {
 		Paragraph addressHeader = new Paragraph("Experience Detail:", new Font(
 				Font.BOLD));
 		addressHeader.setSpacingBefore(15);
@@ -248,8 +264,6 @@ public class DataUtil {
 		PdfPTable expTable = new PdfPTable(2);
 		expTable.setWidthPercentage(75);
 		expTable.setSpacingBefore(20);
-
-		Experience experience = (Experience) map.get("experience");
 
 		Paragraph companypar = new Paragraph();
 		companypar.add(experience.getCompany());
@@ -285,7 +299,7 @@ public class DataUtil {
 		return document;
 	}
 
-	private Document createProjectData(Document document, ModelMap map)
+	private Document createProjectData(Document document, Project project)
 			throws DocumentException {
 		Paragraph addressHeader = new Paragraph("Project Detail:", new Font(
 				Font.BOLD));
@@ -297,8 +311,6 @@ public class DataUtil {
 		PdfPTable projectTable = new PdfPTable(2);
 		projectTable.setWidthPercentage(75);
 		projectTable.setSpacingBefore(20);
-
-		Project project = (Project) map.get("project");
 
 		Paragraph projectpar = new Paragraph();
 		projectpar.add(project.getProject());
@@ -340,6 +352,52 @@ public class DataUtil {
 		rolepar.setAlignment(Element.ALIGN_JUSTIFIED);
 		document.add(rolepar);
 
+		return document;
+	}
+
+	@SuppressWarnings("unchecked")
+	private Document createDatabaseData(Document document, ModelMap map)
+			throws DocumentException {
+		java.util.List<Database> databases = (java.util.List<Database>) map
+				.get("databases");
+		if (databases != null && databases.size() > 0) {
+			Paragraph databaseHeader = new Paragraph("Database Details:",
+					new Font(Font.BOLD));
+			databaseHeader.setSpacingBefore(15);
+			databaseHeader.setSpacingAfter(15);
+			databaseHeader.font().setStyle(Font.BOLD);
+			databaseHeader.font().setStyle(Font.UNDERLINE);
+			document.add(databaseHeader);
+
+			List list = new List(true, 50);
+			for (Database database : databases) {
+				list.add(new ListItem(database.getTechnology()));
+			}
+			document.add(list);
+		}
+		return document;
+	}
+
+	@SuppressWarnings("unchecked")
+	private Document createDevelopmentData(Document document, ModelMap map)
+			throws DocumentException {
+		java.util.List<Development> developments = (java.util.List<Development>) map
+				.get("developments");
+		if (developments != null && developments.size() > 0) {
+			Paragraph developmentHeader = new Paragraph("Development Details:",
+					new Font(Font.BOLD));
+			developmentHeader.setSpacingBefore(15);
+			developmentHeader.setSpacingAfter(15);
+			developmentHeader.font().setStyle(Font.BOLD);
+			developmentHeader.font().setStyle(Font.UNDERLINE);
+			document.add(developmentHeader);
+
+			List list = new List(true, 50);
+			for (Development development : developments) {
+				list.add(new ListItem(development.getTechnology()));
+			}
+			document.add(list);
+		}
 		return document;
 	}
 }

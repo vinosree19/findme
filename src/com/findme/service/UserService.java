@@ -4,13 +4,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.findme.dao.AddressDAO;
 import com.findme.dao.DatabaseDAO;
 import com.findme.dao.DevelopmentDAO;
+import com.findme.dao.EducationDAO;
 import com.findme.dao.ExperienceDAO;
 import com.findme.dao.PersonDAO;
 import com.findme.dao.ProjectDAO;
@@ -18,6 +18,7 @@ import com.findme.dao.UserDAO;
 import com.findme.model.Address;
 import com.findme.model.Database;
 import com.findme.model.Development;
+import com.findme.model.Education;
 import com.findme.model.Experience;
 import com.findme.model.Person;
 import com.findme.model.Project;
@@ -52,16 +53,16 @@ public class UserService {
 	private DevelopmentDAO developmentDAO;
 
 	@Autowired
-	private HibernateTemplate hibernateTemplate;
-
-	@Autowired
-	public void setHibernateTemplate(HibernateTemplate hibernateTemplate) {
-		this.hibernateTemplate = hibernateTemplate;
-	}
+	private EducationDAO educationDAO;
 
 	@Transactional
 	public List<User> getAuthentication(User data) {
 		return userDAO.checkUser(data);
+	}
+
+	@Transactional
+	public User getUserDetails(int userid) {
+		return userDAO.getUserDetails(userid);
 	}
 
 	@Transactional
@@ -164,5 +165,29 @@ public class UserService {
 	@Transactional
 	public void deleteDevelopmentDetails(int userId) {
 		developmentDAO.deleteDevelopmentDetails(userId);
+	}
+
+	@Transactional
+	public Education updateEducationDetails(Education edu, User user, int index) {
+		Education education = new Education();
+		education.setUserid(user.getId());
+		education.setEduSeq(index);
+		education.setQualification(edu.getQualification());
+		education.setPassing(edu.getPassing());
+		education.setInstitution(edu.getInstitution());
+		education.setPercentage(edu.getPercentage());
+		education.setLstUpdateDt(new Date());
+		education.setLstUpdateUser(user.getId());
+		return educationDAO.updateEducationDetails(education);
+	}
+
+	@Transactional
+	public List<Education> getEducationDetails(int userId) {
+		return educationDAO.getEducationDetails(userId);
+	}
+
+	@Transactional
+	public void deleteEducationDetails(int userId) {
+		educationDAO.deleteEducationDetails(userId);
 	}
 }

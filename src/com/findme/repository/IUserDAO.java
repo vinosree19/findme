@@ -10,6 +10,8 @@ import com.findme.model.User;
  */
 public interface IUserDAO {
 
+	User getUserDetails(int userId);
+
 	List<User> getUsers();
 
 	List<User> checkUser(User user);

@@ -2,6 +2,9 @@ package com.findme.dao;
 
 import java.util.List;
 
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +46,19 @@ public class UserDAO implements IUserDAO {
 	@Override
 	public void updateUser(User user) {
 		hibernateTemplate.saveOrUpdate(user);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public User getUserDetails(int userId) {
+		SessionFactory sessionFactory = hibernateTemplate.getSessionFactory();
+		Session session = sessionFactory.getCurrentSession();
+		String sql = "SELECT {s.*} FROM user_t s WHERE user_id = :id";
+		SQLQuery query = (SQLQuery) session.createSQLQuery(sql).setParameter(
+				"id", userId);
+		query.addEntity("s", User.class);
+		List<User> list = query.list();
+		return list.get(0);
 	}
 
 }

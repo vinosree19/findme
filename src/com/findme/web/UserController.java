@@ -24,10 +24,14 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.findme.model.Address;
 import com.findme.model.Database;
 import com.findme.model.Development;
+import com.findme.model.Education;
 import com.findme.model.Experience;
 import com.findme.model.Person;
 import com.findme.model.Project;
+import com.findme.model.SearchQuery;
+import com.findme.model.SearchQueryResult;
 import com.findme.model.User;
+import com.findme.service.SearchService;
 import com.findme.service.UserService;
 import com.findme.util.JSONParseUtil;
 
@@ -43,6 +47,9 @@ public class UserController {
 	@Autowired
 	private UserService service = new UserService();
 
+	@Autowired
+	private SearchService searchService = new SearchService();
+
 	private JSONParseUtil util = new JSONParseUtil();
 
 	@RequestMapping(value = "/login.action", method = RequestMethod.POST)
@@ -50,6 +57,7 @@ public class UserController {
 	Map<String, Object> login(HttpServletRequest request, @RequestBody User data) {
 		List<Database> database = new ArrayList<Database>();
 		List<Development> development = new ArrayList<Development>();
+		List<Education> education = new ArrayList<Education>();
 		Map<String, Object> response = new HashMap<String, Object>();
 		List<User> users = service.getAuthentication(data);
 		if (users != null && users.size() > 0
@@ -87,6 +95,12 @@ public class UserController {
 				development.add(dev);
 			}
 			response.put("development", development);
+			List<Education> educations = service.getEducationDetails(users.get(
+					0).getId());
+			for (Education edu : educations) {
+				education.add(edu);
+			}
+			response.put("education", education);
 			response.put("msg", true);
 			return response;
 		}
@@ -100,6 +114,7 @@ public class UserController {
 			@RequestBody User data) {
 		List<Database> database = new ArrayList<Database>();
 		List<Development> development = new ArrayList<Development>();
+		List<Education> education = new ArrayList<Education>();
 		Map<String, Object> response = new HashMap<String, Object>();
 		List<User> users = service.getAuthentication(data);
 		if (users != null && users.size() > 0) {
@@ -133,6 +148,12 @@ public class UserController {
 			for (Development dev : developments) {
 				development.add(dev);
 			}
+			List<Education> educations = service.getEducationDetails(users.get(
+					0).getId());
+			for (Education edu : educations) {
+				education.add(edu);
+			}
+			response.put("education", education);
 			response.put("development", development);
 			response.put("user", users.get(0));
 			response.put("msg", true);
@@ -161,6 +182,7 @@ public class UserController {
 			@RequestBody HashMap<String, Object> data) throws ParseException {
 		int index = 0;
 		int devIndex = 0;
+		int eduIndex = 0;
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		if (data != null) {
@@ -214,8 +236,26 @@ public class UserController {
 							.toString(), user, ++devIndex);
 				}
 			}
+			if (data.get("education") != null) {
+				service.deleteEducationDetails(user.getId());
+				JSONObject jsonObject = (JSONObject) JSONSerializer.toJSON(data
+						.get("education"));
+				JSONArray list = (JSONArray) jsonObject
+						.getJSONArray("educations");
+				for (int i = 0; i < list.size(); i++) {
+					JSONObject object = list.getJSONObject(i);
+					service.updateEducationDetails(
+							util.getEducationFromJSON(object), user, ++eduIndex);
+				}
+			}
 			return true;
 		}
 		return false;
+	}
+
+	@RequestMapping(value = "/search.action", method = RequestMethod.POST)
+	public @ResponseBody
+	List<SearchQueryResult> search(@RequestBody SearchQuery data) {
+		return searchService.searchQuery(data);
 	}
 }

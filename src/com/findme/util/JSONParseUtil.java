@@ -7,6 +7,7 @@ import java.util.Calendar;
 import net.sf.json.JSONObject;
 
 import com.findme.model.Address;
+import com.findme.model.Education;
 import com.findme.model.Experience;
 import com.findme.model.Person;
 import com.findme.model.Project;
@@ -71,5 +72,12 @@ public class JSONParseUtil {
 		experience.setTodate(to.getTime());
 		experience.setExperience(jsonObject.getString("experience"));
 		return experience;
+	}
+
+	public Education getEducationFromJSON(Object data) {
+		JSONObject jsonObject = JSONObject.fromObject(data);
+		Education education = (Education) JSONObject.toBean(jsonObject,
+				Education.class);
+		return education;
 	}
 }

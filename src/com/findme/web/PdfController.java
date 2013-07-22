@@ -2,10 +2,10 @@ package com.findme.web;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.findme.model.Address;
+import com.findme.model.Database;
+import com.findme.model.Development;
 import com.findme.model.Experience;
 import com.findme.model.Person;
 import com.findme.model.Project;
@@ -41,8 +43,8 @@ public class PdfController {
 	void export(ModelMap model, HttpServletResponse response,
 			HttpServletRequest request, OutputStream outputStream)
 			throws DocumentException, IOException {
-		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute("user");
+		User user = service.getUserDetails(Integer.parseInt(request
+				.getParameter("userid")));
 		model.addAttribute("user", user);
 		Person person = (Person) service.getPersonDetails(user.getId());
 		model.addAttribute("person", person);
@@ -59,6 +61,11 @@ public class PdfController {
 		for (Experience experience : service.getExperienceDetails(user.getId())) {
 			model.addAttribute("experience", experience);
 		}
+		List<Database> databases = service.getDatabaseDetails(user.getId());
+		model.addAttribute("databases", databases);
+		List<Development> developments = service.getDevelopmentDetails(user
+				.getId());
+		model.addAttribute("developments", developments);
 		Document document = new Document(PageSize.A4, 50, 50, 50, 50);
 		try {
 			HtmlWriter.getInstance(document, System.out);

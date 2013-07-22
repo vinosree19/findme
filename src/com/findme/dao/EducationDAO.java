@@ -10,15 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.findme.model.Development;
-import com.findme.repository.IDevelopmentDAO;
+import com.findme.model.Education;
+import com.findme.repository.IEducationDAO;
 
 /**
  * @author vinodkumara
  * 
  */
 @Repository
-public class DevelopmentDAO implements IDevelopmentDAO {
+public class EducationDAO implements IEducationDAO {
 
 	@Autowired
 	private HibernateTemplate hibernateTemplate;
@@ -28,35 +28,34 @@ public class DevelopmentDAO implements IDevelopmentDAO {
 		this.hibernateTemplate = hibernateTemplate;
 	}
 
-	@Override
-	public Development updateDevelopmentDetails(Development development) {
-		SessionFactory sessionFactory = hibernateTemplate.getSessionFactory();
-		Session session = sessionFactory.getCurrentSession();
-		session.save(development);
-		return development;
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Development> getDevelopmentDetails(int userId) {
+	public List<Education> getEducationDetails(int userId) {
 		SessionFactory sessionFactory = hibernateTemplate.getSessionFactory();
 		Session session = sessionFactory.getCurrentSession();
-		String sql = "SELECT {s.*} FROM development_t s WHERE user_id = :id";
+		String sql = "SELECT {s.*} FROM education_t s WHERE user_id = :id";
 		SQLQuery query = (SQLQuery) session.createSQLQuery(sql).setParameter(
 				"id", userId);
-		query.addEntity("s", Development.class);
-		List<Development> list = query.list();
+		query.addEntity("s", Education.class);
+		List<Education> list = query.list();
 		return list;
 	}
 
 	@Override
-	public void deleteDevelopmentDetails(int userId) {
+	public Education updateEducationDetails(Education education) {
+		SessionFactory sessionFactory = hibernateTemplate.getSessionFactory();
+		Session session = sessionFactory.getCurrentSession();
+		session.save(education);
+		return education;
+	}
+
+	@Override
+	public void deleteEducationDetails(int userId) {
 		SessionFactory sessionFactory = hibernateTemplate.getSessionFactory();
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createSQLQuery(
-				"DELETE FROM development_t WHERE user_id = :id").setParameter(
+				"DELETE FROM education_t WHERE user_id = :id").setParameter(
 				"id", userId);
 		query.executeUpdate();
 	}
-
 }

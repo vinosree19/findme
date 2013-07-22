@@ -7,6 +7,304 @@ Ext.require([
 	'Ext.form.Panel',
 	'Ext.ux.form.MultiSelect',
 ]);
+/** Start - Search Tab **/
+Ext.regModel('SEARCH',
+{
+	fields: [
+	{
+		type: 'string',
+		name: 'id'
+	},
+	{
+		type: 'string',
+		name: 'username'
+	},
+	{
+		type: 'string',
+		name: 'fullname'
+	},
+	{
+		type: 'string',
+		name: 'project'
+	}]
+});
+var searchStore = Ext.create('Ext.data.Store',
+{
+	autoLoad: true,
+	model: 'SEARCH',
+	data: [],
+	reader: new Ext.data.ArrayReader(['id', 'username', 'fullname', 'project'])
+});
+Ext.define('findme.view.Form1',
+{
+	extend: 'Ext.form.Panel',
+	alias: 'widget.searchform',
+	requires: ['Ext.form.field.Text'],
+	width: '100%',
+	height: '100%',
+	defaults:
+	{
+		bodyStyle: 'padding:5px 5px 5px 5px',
+		margin: "10 10 10 10",
+	},
+	initComponent: function ()
+	{
+		Ext.apply(this,
+		{
+			activeRecord: null,
+			frame: true,
+			title: 'Search Query',
+			defaultType: 'textfield',
+			bodyPadding: 5,
+			width: '100%',
+			fieldDefaults:
+			{
+				anchor: '35%',
+				labelAlign: 'left'
+			},
+			items: [
+			{
+				fieldLabel: 'User',
+				id: 'searchuser',
+				name: 'searchuser',
+				allowBlank: true,
+				labelWidth: 200,
+				margin: "5 5 5 0",
+				disabled: false
+			},
+			{
+				fieldLabel: 'Project',
+				id: 'searchproject',
+				name: 'searchproject',
+				allowBlank: true,
+				labelWidth: 200,
+				margin: "5 5 5 0",
+				disabled: false
+			},
+			{
+				fieldLabel: 'Designation',
+				id: 'searchdesignation',
+				name: 'searchdesignation',
+				allowBlank: true,
+				labelWidth: 200,
+				margin: "5 5 5 0",
+				disabled: false
+			},
+			{
+				fieldLabel: 'Database',
+				id: 'searchdatabase',
+				name: 'searchdatabase',
+				xtype: 'combo',
+				decimalPrecision: 2,
+				allowBlank: true,
+				labelWidth: 200,
+				margin: "5 5 5 0",
+				store: dbstore,
+				queryMode: 'local',
+				displayField: 'name',
+				multiSelect: true,
+				disabled: false,
+				listeners:
+				{
+					inputEl:
+					{
+						keydown: function (e)
+						{
+							e.stopEvent();
+						}
+					}
+				}
+			},
+			{
+				fieldLabel: 'Development',
+				id: 'searchdevelopment',
+				name: 'searchdevelopment',
+				xtype: 'combo',
+				decimalPrecision: 2,
+				allowBlank: true,
+				labelWidth: 200,
+				margin: "5 5 5 0",
+				store: techstore,
+				queryMode: 'local',
+				displayField: 'name',
+				multiSelect: true,
+				disabled: false,
+				listeners:
+				{
+					inputEl:
+					{
+						keydown: function (e)
+						{
+							e.stopEvent();
+						}
+					}
+				}
+			}],
+			dockedItems: [
+			{
+				xtype: 'toolbar',
+				dock: 'bottom',
+				items: [
+				{
+					xtype: 'tbspacer',
+					width: '25%'
+				},
+				{
+					itemId: 'search',
+					text: 'Search',
+					scope: this,
+					handler: this.onSearch
+				},
+				{
+					text: 'Reset',
+					scope: this,
+					handler: this.onResetSearch
+				}]
+			}]
+		});
+		this.callParent();
+	},
+	setActiveRecord: function (record)
+	{
+		this.activeRecord = record;
+		if (record)
+		{
+			this.down('#search').enable();
+			this.getForm().loadRecord(record);
+		}
+		else
+		{
+			this.getForm().reset();
+		}
+	},
+	onResetSearch: function ()
+	{
+		this.setActiveRecord(null);
+		this.getForm().reset();
+	},
+	onSearch: function ()
+	{
+		if (Ext.getCmp('searchuser').getValue() == '' && Ext.getCmp('searchproject').getValue() == '' && Ext.getCmp(
+			'searchdesignation').getValue() == '' && Ext.getCmp('searchdatabase').getValue() == '' && Ext.getCmp(
+			'searchdevelopment').getValue() == '')
+		{
+			Ext.Msg.alert('Error', 'Please enter atleast one search data');
+		}
+		else
+		{
+			search();
+		}
+		this.getForm().reset();
+	}
+});
+Ext.define('findme.view.Grid1',
+{
+	extend: 'Ext.grid.Panel',
+	alias: 'widget.searchgrid',
+	width: '100%',
+	height: '100%',
+	viewConfig:
+	{
+		emptyText: 'There are no records to display'
+	},
+	defaults:
+	{
+		bodyStyle: 'padding:5px 5px 5px 5px',
+		margin: "10 10 10 10",
+	},
+	requires: ['Ext.form.field.Text'],
+	initComponent: function ()
+	{
+		Ext.apply(this,
+		{
+			frame: true,
+			bodyPadding: 5,
+			width: '100%',
+			layout: 'fit',
+			columnLines: true,
+			dockedItems: [
+			{
+				xtype: 'toolbar',
+				items: [
+				{
+					text: 'Print',
+					scope: this,
+					handler: this.onPrint
+				},
+				{
+					text: 'Clear',
+					scope: this,
+					handler: this.onClear
+				}]
+			}],
+			columns: [
+			{
+				header: 'UserId',
+				dataIndex: 'id',
+				hidden: true,
+				hideable: false,
+				field:
+				{
+					type: 'textfield'
+				}
+			},
+			{
+				header: 'Username',
+				width: '20%',
+				sortable: true,
+				dataIndex: 'username',
+				field:
+				{
+					type: 'textfield',
+					allowBlank: true
+				}
+			},
+			{
+				header: 'Full Name',
+				width: '50%',
+				sortable: true,
+				dataIndex: 'fullname',
+				field:
+				{
+					type: 'textfield',
+					allowBlank: true
+				}
+			},
+			{
+				header: 'Project',
+				width: '25%',
+				sortable: true,
+				dataIndex: 'project',
+				field:
+				{
+					type: 'textarea',
+					allowBlank: true
+				}
+			}]
+		});
+		this.callParent();
+	},
+	onPrint: function ()
+	{
+		var selection = this.getView().getSelectionModel().getSelection()[0];
+		if (selection)
+		{
+			print(selection.id);
+		}
+	},
+	onClear: function ()
+	{
+		searchStore.removeAll();
+	},
+	listeners:
+	{
+		itemdblclick: function (dv, record, item, index, e)
+		{
+			print(record.id);
+		}
+	},
+});
+/** End - Search Tab **/
 /** Start - Education Tab **/
 Ext.regModel('EDU',
 {
@@ -32,13 +330,7 @@ var eduStore = Ext.create('Ext.data.Store',
 {
 	autoLoad: true,
 	model: 'EDU',
-	data: [
-	{
-		qualification: '',
-		passing: '',
-		institution: '',
-		percentage: ''
-	}],
+	data: [],
 	reader: new Ext.data.ArrayReader(['qualification', 'passing', 'institution', 'percentage'])
 });
 Ext.define('findme.view.Form',
@@ -143,7 +435,6 @@ Ext.define('findme.view.Form',
 		}
 		else
 		{
-			//this.down('#add').disable();
 			this.getForm().reset();
 		}
 	},
@@ -154,7 +445,8 @@ Ext.define('findme.view.Form',
 	},
 	onSave: function ()
 	{
-		if (eduStore.getCount() < 5)
+		if (eduStore.getCount() < 5 && Ext.getCmp('passing').getValue() >= 1900 && Ext.getCmp('passing').getValue() <= 2100 &&
+			Ext.getCmp('percentage').getValue() >= 0 && Ext.getCmp('percentage').getValue() <= 100)
 		{
 			eduStore.add(
 			{
@@ -166,7 +458,7 @@ Ext.define('findme.view.Form',
 		}
 		else
 		{
-			Ext.Msg.alert('Error', 'Maximum 5 details can add.');
+			Ext.Msg.alert('Error', 'Please Enter the Valid data' + '<br>' + 'Maximum 5 details can add.');
 		}
 		this.getForm().reset();
 	}
@@ -215,6 +507,18 @@ Ext.define('findme.view.Grid',
 					itemId: 'delete',
 					scope: this,
 					handler: this.onDeleteClick
+				},
+				{
+					text: 'Validate',
+					scope: this,
+					listeners:
+					{
+						click: function ()
+						{
+							educationScreenValidation();
+							//this.fireEvent('validatein');
+						}
+					}
 				}]
 			}],
 			columns: [
@@ -226,7 +530,7 @@ Ext.define('findme.view.Grid',
 				field:
 				{
 					type: 'textfield',
-					allowBlank: false
+					allowBlank: true
 				}
 			},
 			{
@@ -236,8 +540,10 @@ Ext.define('findme.view.Grid',
 				dataIndex: 'passing',
 				field:
 				{
-					type: 'textfield',
-					allowBlank: false
+					xtype: 'numberfield',
+					minValue: 1900,
+					maxValue: 2100,
+					allowBlank: true
 				}
 			},
 			{
@@ -248,7 +554,7 @@ Ext.define('findme.view.Grid',
 				field:
 				{
 					type: 'textarea',
-					allowBlank: false
+					allowBlank: true
 				}
 			},
 			{
@@ -258,8 +564,11 @@ Ext.define('findme.view.Grid',
 				dataIndex: 'percentage',
 				field:
 				{
-					type: 'textfield',
-					allowBlank: false
+					xtype: 'numberfield',
+					decimalPrecision: 2,
+					minValue: 0.00,
+					maxValue: 100.00,
+					allowBlank: true
 				}
 			}]
 		});
@@ -397,8 +706,13 @@ Ext
 					margin: "0 0 10 0",
 				},
 				{
+					xtype: 'displayfield',
+					id: 'userid',
+					hidden: true,
+				},
+				{
 					xtype: 'tbspacer',
-					width: '66%'
+					width: '64%'
 				},
 				{
 					xtype: 'button',
@@ -1232,11 +1546,20 @@ Ext
 				},
 				{
 					title: 'Search',
-					defaults:
+					width: '100%',
+					height: '100%',
+					items: [
 					{
-						width: 230
+						itemId: 'form1',
+						xtype: 'searchform',
 					},
-					defaultType: 'textfield',
+					{
+						itemId: 'grid1',
+						stripeRows: true,
+						xtype: 'searchgrid',
+						title: 'Search Query List',
+						store: searchStore,
+					}]
 				}]
 			}]
 		});
